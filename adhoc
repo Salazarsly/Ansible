@@ -1,0 +1,7 @@
+Adhoc commands :
+
+    ansible localhost -m ping
+    ansible localhost -m copy -a "content='how you doin?\n' dest=./motd"
+    ansible localhost -m lineinfile -a "path=./motd line='Anisble is super awesome'"
+    ansible localhost -m lineinfile -a "dest=./motd regexp='^ansible is' line='Ansible is damn amazing' " 
+    history | grep "ansible localhost" >> adhoc 
