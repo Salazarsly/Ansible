@@ -1,0 +1,29 @@
+---
+ - name: Apache
+   hosts: all
+   become: yes
+   tasks:
+    - name: Install the package
+      yum:
+      name: httpd
+      state: present
+    - name: Downloading Configuration file
+      get_url:
+        url: ftp://master.example.com/pub/new.conf
+        dest: /etc/httpd/conf.d/virtual.conf
+    - name: Creating Index file
+      lineinfile:
+        line: " Hello from {{ ansible_hostname }} "
+        dest: /var/www/html/index.html
+        state: present
+        create: yes
+    - name: Starting the service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: Applying firewall rule
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled                 
