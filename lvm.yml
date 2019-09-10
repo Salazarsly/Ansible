@@ -1,0 +1,45 @@
+---
+ - name: Creating lvm from scratch
+   hosts: web
+   tasks:
+    - name: Creating a partition
+      parted:
+        device: /dev/vdb
+        number: 1
+        part_type: primary
+        part_end: 5GiB
+        flags: [ lvm ]
+        state: present
+    
+    - name: Creating a volume group with pe size = 16MB
+      lvg:
+        vg: myvg
+        pvs: /dev/vdb1
+        pesize: 16
+        
+    - name: Creating an logical volume on top of vg
+      lvol:
+        vg: myvg
+        lv: mylv
+        size: 2048
+
+    - name: Adding a file system to the logical volume
+      filesystem:
+        fstype: xfs
+        dev: /dev/mapper/myvg-mylv
+
+    - name: Permanent mounting the logical volume
+      mount:
+        path: /mnt
+        src: /dev/mapper/myvg-mylv
+        fstype: xfs
+        opts: defaults
+        state: mounted
+        state: mounted
+
+
+       
+
+   
+
+
