@@ -35,7 +35,6 @@
         fstype: xfs
         opts: defaults
         state: mounted
-        state: mounted
 
 
        
