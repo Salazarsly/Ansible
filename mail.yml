@@ -1,0 +1,34 @@
+---
+ - name: postfix
+   hosts: localhost
+   tasks:
+    - name: Installing package
+      yum:
+        name: postfix
+        state: latest
+    - name: Config file
+      blockinfile:
+         path: /etc/postfix/main.cf
+         block: | 
+          myhostname = salazar.com
+          myorigin = $mydomain
+          inet_interfaces = all
+          mydestination = $myhostname, localhost.$mydomain, localhost, mail.$mydomain, www.$mydomain, ftp.$mydomain
+    
+    - name: Replace config files
+      replace:
+        path: /etc/postfix/main.cf
+        regexp: 'inet_interfaces = localhost' 
+        replace: '#inet_interfaces = localhost' 
+    - name: Service 
+      service:
+        name: postfix
+        state: started
+        enabled: yes
+
+    - name: Firewalld
+      firewalld:
+        service: smtp
+        permanent: yes
+        state: enabled
+
